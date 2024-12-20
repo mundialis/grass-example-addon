@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 ############################################################################
 #
@@ -21,6 +22,7 @@
 #
 #############################################################################
 """
+
 # %Module
 # % description: {SHORT DESCRIPTION}.
 # % keyword: vector
@@ -63,6 +65,7 @@
 # import needed libraries
 import atexit
 import os
+
 import grass.script as grass
 
 # initialize global variables
@@ -80,7 +83,7 @@ def cleanup():
 
 
 def main():
-    """Main function of v.example"""
+    """Run main function of v.example."""
     global rm_vec
 
     # print attribute values if requested
@@ -108,7 +111,11 @@ def main():
         if column not in columns.keys():
             grass.fatal(
                 _("Column %s does not exist in layer %s of vector %s")
-                % (column, layer, aoi_vector)
+                % (
+                    column,
+                    layer,
+                    aoi_vector,
+                )
             )
 
         # get attribute columns as list
@@ -119,13 +126,21 @@ def main():
         except ValueError:
             grass.fatal(
                 _("Column %s does not exist in layer %s of vector %s")
-                % (column, layer, aoi_vector)
+                % (
+                    column,
+                    layer,
+                    aoi_vector,
+                )
             )
 
         if colidx >= 0:
             grass.verbose(
                 _("Found column %s in vector %s, layer %s")
-                % (column, aoi_vector, layer)
+                % (
+                    column,
+                    aoi_vector,
+                    layer,
+                )
             )
 
         # query the database and table directly using information in the
@@ -135,7 +150,9 @@ def main():
         driver = db_connection["driver"]
 
         table_description = grass.db_describe(
-            table=table, database=database, driver=driver
+            table=table,
+            database=database,
+            driver=driver,
         )
         found = False
         # TODO: pythonize this for loop
@@ -148,7 +165,11 @@ def main():
         if found is False:
             grass.fatal(
                 _("Column %s does not exist in layer %s of vector %s")
-                % (column, layer, aoi_vector)
+                % (
+                    column,
+                    layer,
+                    aoi_vector,
+                )
             )
 
         # select attribute values with vector_db_select()
@@ -156,7 +177,9 @@ def main():
             _("Print attribute values using %s") % "vector_db_select()"
         )
         column_values = grass.vector_db_select(
-            aoi_vector, int(layer), columns=column
+            aoi_vector,
+            int(layer),
+            columns=column,
         )
         # go over table rows
         for key in column_values["values"]:
@@ -198,7 +221,11 @@ def main():
         out_overlay = out_grid
     # divide into tiles
     kachel_num = grass.parse_command(
-        "v.db.select", map=out_overlay, columns="cat", flags="c", quiet=True
+        "v.db.select",
+        map=out_overlay,
+        columns="cat",
+        flags="c",
+        quiet=True,
     )
     for kachel in kachel_num:
         grass.run_command(
